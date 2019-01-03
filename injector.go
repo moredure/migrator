@@ -7,12 +7,11 @@ import (
 )
 
 func initializeApp() (*Migrator, error) {
-	wire.Build(
+	panic(wire.Build(
 		NewFromOptions,
 		NewToOptions,
 		NewToRedisClient,
 		NewFromRedisClient,
 		NewMigrator,
-	)
-	return &Migrator{}, nil
+	))
 }
