@@ -5,8 +5,6 @@ import (
 	"strings"
 )
 
-type RedisMetrics map[string]interface{}
-
 func getValue(value string) interface{} {
 	if !strings.Contains(value, ",") || !strings.Contains(value, "=") {
 		if strings.Contains(value, ".") {
@@ -31,7 +29,7 @@ func getValue(value string) interface{} {
 	}
 }
 
-func ParseMetrics(info string) RedisMetrics {
+func ParseInfo(info string) map[string]interface{} {
 	m := make(map[string]interface{})
 	for _, line := range strings.Split(info, "\r\n") {
 		if len(line) != 0 && !strings.HasPrefix(line, "#") {
@@ -44,11 +42,27 @@ func ParseMetrics(info string) RedisMetrics {
 	return m
 }
 
-func ParseClient(client string) map[string]interface{} {
+func parseClient(client string) map[string]interface{} {
 	result := make(map[string]interface{})
 	for _, item := range strings.Split(client, " ") {
-		kv := strings.Split(item, "=")
-		result[kv[0]] = kv[1]
+		kv := strings.SplitN(item, "=", 2)
+		result[kv[0]] = getClientValue(kv[1])
 	}
 	return result
+}
+
+func getClientValue(value string) interface{} {
+	if result, err := strconv.ParseInt(value, 10, 64); err != nil {
+		return value
+	} else {
+		return result
+	}
+}
+
+func ParseClientList(clientList string) []map[string]interface{} {
+	var list []map[string]interface{}
+	for _, client := range strings.Split(clientList, "\r\n") {
+		list = append(list, parseClient(client))
+	}
+	return list
 }

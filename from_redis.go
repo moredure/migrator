@@ -5,13 +5,15 @@ import (
 	"os"
 )
 
-type FromRedisClient *redis.Client
-type FromOptions *redis.Options
+type (
+	FromOptions     *redis.Options
+	FromRedisClient *redis.Client
+)
 
 func NewFromOptions() (FromOptions, error) {
 	return redis.ParseURL(os.Getenv("MICROREDIS_FROM_ADDRESS"))
 }
 
-func NewFromRedisClient(toOptions FromOptions) (FromRedisClient) {
+func NewFromRedisClient(toOptions FromOptions) FromRedisClient {
 	return redis.NewClient(toOptions)
 }

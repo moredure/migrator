@@ -7,6 +7,3 @@ func main() {
 	}
 	migrator.Migrate()
 }
-
-
-

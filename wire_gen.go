@@ -5,7 +5,7 @@
 
 package main
 
-// Injectors from injector.go:
+// Injectors From injector.go:
 
 func initializeApp() (*Migrator, error) {
 	fromOptions, err := NewFromOptions()
