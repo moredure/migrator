@@ -1,6 +1,5 @@
 package main
 
-
 func main() {
 	migrator, err := initializeApp()
 	if err != nil {
