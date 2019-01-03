@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-redis/redis"
+	"github.com/microredis/redisutil"
 	"log"
 	"net"
 )
@@ -51,7 +52,7 @@ func (m *Migrator) WaitForUp() {
 		if err != nil {
 			panic(err)
 		}
-		infoParsed := ParseInfo(info)
+		infoParsed := redisutil.ParseInfo(info)
 		if infoParsed["master_link_status"].(string) == "up" {
 			return
 		}
@@ -64,7 +65,7 @@ func (m *Migrator) WaitForComplete() {
 		if err != nil {
 			panic(err)
 		}
-		for _, client := range ParseClientList(clientList) {
+		for _, client := range redisutil.ParseClientList(clientList) {
 			if client["flags"] == "S" {
 				omem := client["omem"].(int64)
 				obl := client["obl"].(int64)

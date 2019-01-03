@@ -195,7 +195,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Build.go build gitlab.com/microredis/migrator">
+  <component name="RunManager">
     <configuration name="go build gitlab.com/microredis/migrator" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
       <module name="migrator" />
       <working_directory value="$PROJECT_DIR$" />
@@ -205,24 +205,6 @@
       <directory value="$PROJECT_DIR$/" />
       <method v="2" />
     </configuration>
-    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="migrator" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/main.go" />
-      <package value="gitlab.com/microredis/migrator" />
-      <directory value="$PROJECT_DIR$/" />
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="Go Build.go build gitlab.com/microredis/migrator" />
-      <item itemvalue="Go Build.go build main.go" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Go Build.go build main.go" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="2560" height="1440" extended-state="0" />
