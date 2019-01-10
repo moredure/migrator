@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"github.com/go-redis/redis"
-	"github.com/microredis/redisutil"
 	"log"
 	"net"
 )
@@ -33,54 +31,49 @@ func (m *Migrator) Migrate() {
 }
 
 func (m *Migrator) PrepareTo() {
-	if _, err := m.to.ConfigSet("slave-read-only", "yes").Result(); err != nil {
+	if err := m.to.ConfigSet("slave-read-only", "yes").Err(); err != nil {
 		panic(err)
 	}
-	if _, err := m.to.ConfigSet("masterauth", m.From.Options().Password).Result(); err != nil {
+	if err := m.to.ConfigSet("masterauth", m.From.Options().Password).Err(); err != nil {
 		panic(err)
 	}
 	if host, port, err := net.SplitHostPort(m.From.Options().Addr); err != nil {
 		panic(err)
-	} else if _, err := m.to.SlaveOf(host, port).Result(); err != nil {
+	} else if err := m.to.SlaveOf(host, port).Err(); err != nil {
 		panic(err)
 	}
 }
 
 func (m *Migrator) WaitForUp() {
+	info := new(Info)
 	for {
-		info, err := m.to.Info().Result()
-		if err != nil {
+		if err := m.to.Info().Scan(info); err != nil {
 			panic(err)
 		}
-		infoParsed := redisutil.ParseInfo(info)
-		if infoParsed["master_link_status"].(string) == "up" {
+		if info.MasterLinkStatus == "up" {
 			return
 		}
 	}
 }
 
 func (m *Migrator) WaitForComplete() {
+	var clientList ClientList
 	for {
-		clientList, err := m.From.ClientList().Result()
-		if err != nil {
+		if err := m.From.ClientList().Scan(&clientList); err != nil {
 			panic(err)
 		}
-		for _, client := range redisutil.ParseClientList(clientList) {
-			if client["flags"] == "S" {
-				omem := client["omem"].(int64)
-				obl := client["obl"].(int64)
-				oll := client["oll"].(int64)
-				fmt.Println(omem, obl, oll)
-				oblOllSum := toBinary(obl) + oll
-				if m.maxOutBuff == 0 || m.maxOutBuff < omem {
-					m.maxOutBuff = omem
+		for _, client := range clientList {
+			if client.Flags == "S" {
+				oblOllSum := toBinary(client.Obl) + client.Oll
+				if m.maxOutBuff == 0 || m.maxOutBuff < client.Omem {
+					m.maxOutBuff = client.Omem
 				}
 				if m.maxOutBuffCommands == 0 || m.maxOutBuffCommands < oblOllSum {
 					m.maxOutBuffCommands = oblOllSum
 				}
 			}
 		}
-		if m.maxOutBuff == 0 && m.maxOutBuffCommands == 0 {
+		if (m.maxOutBuff + m.maxOutBuffCommands) == 0 {
 			return
 		}
 	}
@@ -94,10 +87,10 @@ func toBinary(x int64) int64 {
 }
 
 func (m *Migrator) OnComplete() {
-	if _, err := m.to.SlaveOf("no", "one").Result(); err != nil {
+	if err := m.to.SlaveOf("no", "one").Err(); err != nil {
 		panic(err)
 	}
-	if _, err := m.to.ConfigSet("slave-read-only", "no").Result(); err != nil {
+	if err := m.to.ConfigSet("slave-read-only", "no").Err(); err != nil {
 		panic(err)
 	}
 }
