@@ -21,16 +21,16 @@ func (m *Migrator) Migrate() {
 	defer m.to.Close()
 	defer m.From.Close()
 	log.Println("Started...")
-	m.PrepareTo()
+	m.prepareTo()
 	log.Println("Waiting...")
-	m.WaitForUp()
+	m.waitForUp()
 	log.Println("Waiting for complete...")
-	m.WaitForComplete()
+	m.waitForComplete()
 	log.Println("Finish...")
-	m.OnComplete()
+	m.onComplete()
 }
 
-func (m *Migrator) PrepareTo() {
+func (m *Migrator) prepareTo() {
 	if err := m.to.ConfigSet("slave-read-only", "yes").Err(); err != nil {
 		panic(err)
 	}
@@ -44,7 +44,7 @@ func (m *Migrator) PrepareTo() {
 	}
 }
 
-func (m *Migrator) WaitForUp() {
+func (m *Migrator) waitForUp() {
 	info := new(Info)
 	for {
 		if err := m.to.Info().Scan(info); err != nil {
@@ -56,7 +56,7 @@ func (m *Migrator) WaitForUp() {
 	}
 }
 
-func (m *Migrator) WaitForComplete() {
+func (m *Migrator) waitForComplete() {
 	var clientList ClientList
 	for {
 		if err := m.From.ClientList().Scan(&clientList); err != nil {
@@ -64,12 +64,12 @@ func (m *Migrator) WaitForComplete() {
 		}
 		for _, client := range clientList {
 			if client.Flags == "S" {
-				oblOllSum := toBinary(client.Obl) + client.Oll
+				oblAndOll := toBinary(client.Obl) + client.Oll
 				if m.maxOutBuff == 0 || m.maxOutBuff < client.Omem {
 					m.maxOutBuff = client.Omem
 				}
-				if m.maxOutBuffCommands == 0 || m.maxOutBuffCommands < oblOllSum {
-					m.maxOutBuffCommands = oblOllSum
+				if m.maxOutBuffCommands == 0 || m.maxOutBuffCommands < oblAndOll {
+					m.maxOutBuffCommands = oblAndOll
 				}
 			}
 		}
@@ -79,14 +79,7 @@ func (m *Migrator) WaitForComplete() {
 	}
 }
 
-func toBinary(x int64) int64 {
-	if x > 0 {
-		return 1
-	}
-	return 0
-}
-
-func (m *Migrator) OnComplete() {
+func (m *Migrator) onComplete() {
 	if err := m.to.SlaveOf("no", "one").Err(); err != nil {
 		panic(err)
 	}
