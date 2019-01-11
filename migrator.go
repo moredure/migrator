@@ -7,7 +7,7 @@ import (
 )
 
 type Migrator struct {
-	From               *redis.Client
+	from               *redis.Client
 	to                 *redis.Client
 	maxOutBuff         int64
 	maxOutBuffCommands int64
@@ -19,7 +19,7 @@ func NewMigrator(fromRedisClient FromRedisClient, toRedisClient ToRedisClient) *
 
 func (m *Migrator) Migrate() {
 	defer m.to.Close()
-	defer m.From.Close()
+	defer m.from.Close()
 	log.Println("Started...")
 	m.prepareTo()
 	log.Println("Waiting...")
@@ -34,10 +34,10 @@ func (m *Migrator) prepareTo() {
 	if err := m.to.ConfigSet("slave-read-only", "yes").Err(); err != nil {
 		panic(err)
 	}
-	if err := m.to.ConfigSet("masterauth", m.From.Options().Password).Err(); err != nil {
+	if err := m.to.ConfigSet("masterauth", m.from.Options().Password).Err(); err != nil {
 		panic(err)
 	}
-	if host, port, err := net.SplitHostPort(m.From.Options().Addr); err != nil {
+	if host, port, err := net.SplitHostPort(m.from.Options().Addr); err != nil {
 		panic(err)
 	} else if err := m.to.SlaveOf(host, port).Err(); err != nil {
 		panic(err)
@@ -59,7 +59,7 @@ func (m *Migrator) waitForUp() {
 func (m *Migrator) waitForComplete() {
 	var clientList ClientList
 	for {
-		if err := m.From.ClientList().Scan(&clientList); err != nil {
+		if err := m.from.ClientList().Scan(&clientList); err != nil {
 			panic(err)
 		}
 		for _, client := range clientList {
