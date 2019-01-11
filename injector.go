@@ -6,12 +6,11 @@ import (
 	"github.com/google/wire"
 )
 
-func initializeApp() (*Migrator, error) {
+func initializeApp() (Migrator, error) {
 	panic(wire.Build(
 		NewFromOptions,
 		NewToOptions,
-		NewToRedisClient,
-		NewFromRedisClient,
+		NewRedisClients,
 		NewMigrator,
 	))
 }

@@ -7,17 +7,16 @@ package main
 
 // Injectors from injector.go:
 
-func initializeApp() (*Migrator, error) {
+func initializeApp() (Migrator, error) {
 	fromOptions, err := NewFromOptions()
 	if err != nil {
 		return nil, err
 	}
-	fromRedisClient := NewFromRedisClient(fromOptions)
 	toOptions, err := NewToOptions()
 	if err != nil {
 		return nil, err
 	}
-	toRedisClient := NewToRedisClient(toOptions)
-	migrator := NewMigrator(fromRedisClient, toRedisClient)
+	redisClients := NewRedisClients(fromOptions, toOptions)
+	migrator := NewMigrator(redisClients)
 	return migrator, nil
 }
