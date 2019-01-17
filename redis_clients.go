@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/go-redis/redis"
 	"os"
+	"errors"
 )
 
 type (
@@ -14,12 +15,25 @@ type (
 	}
 )
 
+const (
+	REDIS_SOURCE      = "REDIS_SOURCE"
+	REDIS_DESTINATION = "REDIS_DESTINATION"
+)
+
+func NewRedisOptionsFromEnv(key string) (*redis.Options, error) {
+	url, ok := os.LookupEnv(key)
+	if !ok {
+		return nil, fmt.Errorf("environment variable $%s is not defined", key)
+	}
+	return redis.ParseURL(url)
+}
+
 func NewFromOptions() (FromOptions, error) {
-	return redis.ParseURL(os.Getenv("MICROREDIS_FROM_ADDRESS"))
+	return NewRedisOptionsFromEnv(REDIS_SOURCE)
 }
 
 func NewToOptions() (ToOptions, error) {
-	return redis.ParseURL(os.Getenv("MICROREDIS_TO_ADDRESS"))
+	return NewRedisOptionsFromEnv(REDIS_DESTINATION)
 }
 
 func NewRedisClients(from FromOptions, to ToOptions) RedisClients {
