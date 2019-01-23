@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/go-redis/redis"
 	"os"
-	"errors"
+	"fmt"
 )
 
 type (
