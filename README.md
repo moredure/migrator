@@ -1,3 +1,12 @@
 # Migrator
 Script for realtime migration from one redis source to another.
 Just specify ```$REDIS_SOURCE``` and ```$REDIS_DESTINATION``` and the deal will be done.
+
+To use this tool
+Use docker:
+```
+docker run -it --rm \
+-e REDIS_SOURCE=redis://localhost:6379 \
+-e REDIS_DESTINATION=redis://localhost:6380 \
+microredis/migrator
+```
