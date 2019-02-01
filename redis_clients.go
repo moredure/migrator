@@ -1,14 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-redis/redis"
 	"os"
-	"fmt"
 )
 
 type (
-	FromOptions *redis.Options
-	ToOptions   *redis.Options
+	FromOptions  *redis.Options
+	ToOptions    *redis.Options
 	RedisClients struct {
 		From *redis.Client
 		To   *redis.Client
