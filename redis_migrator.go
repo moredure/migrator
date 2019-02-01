@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/microredis/tools/closer"
 	"log"
 	"net"
 )
@@ -12,8 +13,7 @@ type redisMigrator struct {
 }
 
 func (m *redisMigrator) Migrate() {
-	defer m.From.Close()
-	defer m.To.Close()
+	defer closer.MustClose(m.To, m.From)
 	log.Println("Started...")
 	m.prepareTo()
 	log.Println("Waiting...")
