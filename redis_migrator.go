@@ -26,15 +26,15 @@ func (m *redisMigrator) Migrate() {
 
 func (m *redisMigrator) prepareTo() {
 	if err := m.To.ConfigSet("slave-read-only", "yes").Err(); err != nil {
-		panic(err)
+		log.Fatalf("failed to set slave-read-only to yes with error %v\n", err)
 	}
 	if err := m.To.ConfigSet("masterauth", m.From.Options().Password).Err(); err != nil {
-		panic(err)
+		log.Fatalf("failed to set masterauth password with error %v\n", err)
 	}
 	if host, port, err := net.SplitHostPort(m.From.Options().Addr); err != nil {
-		panic(err)
+		log.Fatalf("failed to split host port of source redis with error %v\n", err)
 	} else if err := m.To.SlaveOf(host, port).Err(); err != nil {
-		panic(err)
+		log.Fatalf("failed to make target slave of host %s port %s with error %v\n", host, port, err)
 	}
 }
 
@@ -42,7 +42,7 @@ func (m *redisMigrator) waitForUp() {
 	info := new(Info)
 	for {
 		if err := m.To.Info().Scan(info); err != nil {
-			panic(err)
+			log.Fatalf("failed to scan info with error %v\n", err)
 		}
 		if info.MasterLinkStatus == "up" {
 			return
@@ -54,7 +54,7 @@ func (m *redisMigrator) waitForComplete() {
 	var clientList ClientList
 	for {
 		if err := m.From.ClientList().Scan(&clientList); err != nil {
-			panic(err)
+			log.Fatalf("failed to list clients with error %v\n", err)
 		}
 		for _, client := range clientList {
 			if client.Flags == "S" {
@@ -75,10 +75,10 @@ func (m *redisMigrator) waitForComplete() {
 
 func (m *redisMigrator) onComplete() {
 	if err := m.To.SlaveOf("no", "one").Err(); err != nil {
-		panic(err)
+		log.Fatalf("failed to make target slave of no one with error %v\n", err)
 	}
 	if err := m.To.ConfigSet("slave-read-only", "no").Err(); err != nil {
-		panic(err)
+		log.Fatalf("failed to make target not slave-read-only with error %v\n", err)
 	}
 }
 
