@@ -7,7 +7,9 @@ Just specify ```$REDIS_SOURCE``` and ```$REDIS_DESTINATION``` and the deal will 
 To use this tool
 Use docker:
 
-```bash
+```shell
+#!/bin/bash
+
 docker run -it --rm \
 -e REDIS_SOURCE=redis://localhost:6379 \
 -e REDIS_DESTINATION=redis://localhost:6380 \
