@@ -13,6 +13,10 @@ github.com/microredis/tools v0.0.0-20190201210438-43efa59d2185 h1:v5qwEisOl/HvG4
 github.com/microredis/tools v0.0.0-20190201210438-43efa59d2185/go.mod h1:QgZ583LHnlOJ1jC5pgUIsMNrrSfqZDLNDcHR4JruiJo=
 github.com/microredis/tools v0.0.0-20190201211142-cae7938705d1 h1:L6xKzClzYx+YFIxgvUmkkyUsI1UWeNLoyHpjVt0QGco=
 github.com/microredis/tools v0.0.0-20190201211142-cae7938705d1/go.mod h1:QgZ583LHnlOJ1jC5pgUIsMNrrSfqZDLNDcHR4JruiJo=
+github.com/microredis/tools v1.0.0 h1:pCiZoQfDRmihov+yENvoMJZull8OSni0Gu7x4jn4LTo=
+github.com/microredis/tools v1.0.0/go.mod h1:QgZ583LHnlOJ1jC5pgUIsMNrrSfqZDLNDcHR4JruiJo=
+github.com/microredis/tools v1.0.1 h1:Y1WH+JmpDIDJkUZ8h5StbjYbUzAABC+b8mbazOtm5QE=
+github.com/microredis/tools v1.0.1/go.mod h1:QgZ583LHnlOJ1jC5pgUIsMNrrSfqZDLNDcHR4JruiJo=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 golang.org/x/tools v0.0.0-20181017214349-06f26fdaaa28 h1:vnbqcYKfOxPnXXUlBo7t+R4pVIh0wInyOSNxih1S9Dc=
