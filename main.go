@@ -1,9 +1,11 @@
 package main
 
+import "log"
+
 func main() {
-	migrator, err := initializeApp()
+	app, err := initializeApp()
 	if err != nil {
-		panic(err)
+		log.Panicf("failed to initialize app %v\n", err)
 	}
-	migrator.Migrate()
+	app.Migrate()
 }

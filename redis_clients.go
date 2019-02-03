@@ -16,8 +16,8 @@ type (
 )
 
 const (
-	REDIS_SOURCE      = "REDIS_SOURCE"
-	REDIS_DESTINATION = "REDIS_DESTINATION"
+	RedisSource      = "REDIS_SOURCE"
+	RedisDestination = "REDIS_DESTINATION"
 )
 
 func NewRedisOptionsFromEnv(key string) (*redis.Options, error) {
@@ -29,11 +29,11 @@ func NewRedisOptionsFromEnv(key string) (*redis.Options, error) {
 }
 
 func NewFromOptions() (FromOptions, error) {
-	return NewRedisOptionsFromEnv(REDIS_SOURCE)
+	return NewRedisOptionsFromEnv(RedisSource)
 }
 
 func NewToOptions() (ToOptions, error) {
-	return NewRedisOptionsFromEnv(REDIS_DESTINATION)
+	return NewRedisOptionsFromEnv(RedisDestination)
 }
 
 func NewRedisClients(from FromOptions, to ToOptions) RedisClients {
