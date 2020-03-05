@@ -3,6 +3,12 @@
 
 Script for realtime migration from one redis source to another in Golang. Inspired by RedisLabs https://github.com/RedisLabs/redis-migrate
 
+```bash
+git clone https://github.com/mikefaraponov/migrator
+go build
+mv ./migrator /usr/local/bin/migrator
+```
+
 Google Wire https://github.com/google/wire used to simplify dependency management
 
 Just specify ```$REDIS_SOURCE``` and ```$REDIS_DESTINATION``` and the deal will be done.
